@@ -4,6 +4,11 @@ spring:
     username: postgres
     password: postgres
 
+    spring:
+      autoconfigure:
+        exclude:
+          - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -20,5 +25,5 @@ server:
   port: 8080
 
 jwt:
-    secret: 12345678901234567890123456789012
-    expiration: 86400000
+  secret: ${JWT_SECRET:12345678901234567890123456789012}
+  expiration: ${JWT_EXPIRATION:86400000}

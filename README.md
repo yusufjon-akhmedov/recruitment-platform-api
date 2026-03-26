@@ -67,6 +67,7 @@ them.
 * **Springdoc OpenAPI** 2.8.16
 * **JUnit 5**
 * **Mockito**
+* **Testcontainers (PostgreSQL)**
 * **Docker** + **Docker Compose**
 * **Maven**
 
@@ -139,14 +140,22 @@ After startup:
 
 ## Testing
 
-* **JUnit 5** is used for unit tests.
-* **Mockito** is used to mock repositories, `PasswordEncoder`, `JwtService`, and other service dependencies.
-* Current unit tests focus on the service layer: `AuthService`, `CompanyService`, `VacancyService`, and `ApplicationService`.
+* **JUnit 5** is used for both unit and integration tests.
+* **Mockito** is used in unit tests to mock repositories, `PasswordEncoder`, `JwtService`, and other service dependencies.
+* Unit tests focus on the service layer: `AuthService`, `CompanyService`, `VacancyService`, and `ApplicationService`.
+* Integration tests use **Spring Boot Test**, **MockMvc**, and **Testcontainers with PostgreSQL** for a production-like database setup.
+* Integration coverage includes authentication, public/private access rules, company flow, vacancy flow, application flow, and JWT-protected requests.
 
 Run the unit test suite with:
 
 ```bash
 mvn test
+```
+
+Run unit + integration tests with:
+
+```bash
+mvn verify
 ```
 
 ---

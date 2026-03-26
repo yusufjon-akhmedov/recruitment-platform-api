@@ -65,6 +65,8 @@ them.
 * **Flyway**
 * **JJWT** 0.12.5
 * **Springdoc OpenAPI** 2.8.16
+* **JUnit 5**
+* **Mockito**
 * **Docker** + **Docker Compose**
 * **Maven**
 
@@ -132,6 +134,20 @@ After startup:
 
 > Flyway runs automatically on startup using scripts in `src/main/resources/db/migration`.
 > Local defaults use database `recruitment_platform`, username `postgres`, password `postgres`, and port `5432`.
+
+---
+
+## Testing
+
+* **JUnit 5** is used for unit tests.
+* **Mockito** is used to mock repositories, `PasswordEncoder`, `JwtService`, and other service dependencies.
+* Current unit tests focus on the service layer: `AuthService`, `CompanyService`, `VacancyService`, and `ApplicationService`.
+
+Run the unit test suite with:
+
+```bash
+mvn test
+```
 
 ---
 

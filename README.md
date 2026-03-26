@@ -40,6 +40,14 @@ them.
 
 ---
 
+## Architecture diagram
+
+High-level monolithic architecture overview for the recruitment platform:
+
+![Recruitment Platform architecture](docs/recruitment-platform-diagram.png)
+
+---
+
 ## Service scope - Recruitment Platform API
 
 * **Authentication** with `register` and `login` endpoints returning JWT bearer tokens.

@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.auth.service;
 
+/**
+ * Contains unit tests that verify the behavior of the auth service class by mocking its
+ * collaborators.
+ */
+
 import com.yusufjon.recruitmentplatform.auth.dto.AuthResponse;
 import com.yusufjon.recruitmentplatform.auth.dto.LoginRequest;
 import com.yusufjon.recruitmentplatform.auth.dto.RegisterRequest;

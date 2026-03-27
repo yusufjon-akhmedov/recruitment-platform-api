@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.vacancy.entity;
 
+/**
+ * Represents the vacancy entity mapped to the database and used by the domain model.
+ */
+
 import com.yusufjon.recruitmentplatform.company.entity.Company;
 import jakarta.persistence.*;
 

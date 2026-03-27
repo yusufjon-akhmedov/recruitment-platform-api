@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform;
 
+/**
+ * Bootstraps the Spring Boot application and starts the recruitment platform API.
+ */
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.auth.security;
 
+/**
+ * Reads bearer tokens from incoming requests, validates them, and stores the authenticated user in
+ * the security context.
+ */
+
 import com.yusufjon.recruitmentplatform.user.entity.User;
 import com.yusufjon.recruitmentplatform.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;

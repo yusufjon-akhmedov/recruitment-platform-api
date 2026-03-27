@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.application.service;
 
+/**
+ * Contains unit tests that verify the behavior of the application service class by mocking its
+ * collaborators.
+ */
+
 import com.yusufjon.recruitmentplatform.application.dto.ApplicationResponse;
 import com.yusufjon.recruitmentplatform.application.dto.CreateApplicationRequest;
 import com.yusufjon.recruitmentplatform.application.dto.UpdateApplicationStatusRequest;

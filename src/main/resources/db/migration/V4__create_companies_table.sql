@@ -1,3 +1,4 @@
+-- Creates the companies table and connects each company to the recruiter who owns it.
 CREATE TABLE companies
 (
     id           BIGSERIAL PRIMARY KEY,

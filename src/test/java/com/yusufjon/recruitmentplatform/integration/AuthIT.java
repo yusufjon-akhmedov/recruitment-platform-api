@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.integration;
 
+/**
+ * Runs end-to-end integration tests for registration, login, invalid credentials, and request
+ * validation on auth endpoints.
+ */
+
 import com.yusufjon.recruitmentplatform.integration.support.AbstractIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

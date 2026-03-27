@@ -1,5 +1,8 @@
 package com.yusufjon.recruitmentplatform.auth.dto;
 
+/**
+ * Holds the request payload used by the register API flow.
+ */
 
 import com.yusufjon.recruitmentplatform.shared.enums.RoleName;
 import jakarta.validation.constraints.Email;

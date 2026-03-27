@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.application.service;
 
+/**
+ * Contains the business logic for application features and coordinates validation, security
+ * checks, and repository access.
+ */
+
 import com.yusufjon.recruitmentplatform.application.dto.ApplicationResponse;
 import com.yusufjon.recruitmentplatform.application.dto.CreateApplicationRequest;
 import com.yusufjon.recruitmentplatform.application.dto.UpdateApplicationStatusRequest;

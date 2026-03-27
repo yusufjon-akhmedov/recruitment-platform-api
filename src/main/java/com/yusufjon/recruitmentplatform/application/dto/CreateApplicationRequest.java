@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.application.dto;
 
+/**
+ * Holds the request data needed to create a application through the API.
+ */
+
 import jakarta.validation.constraints.NotNull;
 
 public class CreateApplicationRequest {

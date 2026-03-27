@@ -1,3 +1,4 @@
+# Builds the application jar in one stage and runs it in a smaller Java runtime image in the final stage.
 FROM eclipse-temurin:21-jdk AS build
 
 WORKDIR /app

@@ -1,7 +1,14 @@
 package com.yusufjon.recruitmentplatform.vacancy.service;
 
+/**
+ * Contains unit tests that verify the behavior of the vacancy service class by mocking its
+ * collaborators.
+ */
+
 import com.yusufjon.recruitmentplatform.common.exception.ForbiddenException;
+import com.yusufjon.recruitmentplatform.common.exception.BadRequestException;
 import com.yusufjon.recruitmentplatform.common.exception.ResourceNotFoundException;
+import com.yusufjon.recruitmentplatform.common.response.PageResponse;
 import com.yusufjon.recruitmentplatform.company.entity.Company;
 import com.yusufjon.recruitmentplatform.company.repository.CompanyRepository;
 import com.yusufjon.recruitmentplatform.shared.enums.RoleName;
@@ -10,6 +17,7 @@ import com.yusufjon.recruitmentplatform.user.entity.Role;
 import com.yusufjon.recruitmentplatform.user.entity.User;
 import com.yusufjon.recruitmentplatform.vacancy.dto.CreateVacancyRequest;
 import com.yusufjon.recruitmentplatform.vacancy.dto.UpdateVacancyRequest;
+import com.yusufjon.recruitmentplatform.vacancy.dto.VacancyFilterRequest;
 import com.yusufjon.recruitmentplatform.vacancy.dto.VacancyResponse;
 import com.yusufjon.recruitmentplatform.vacancy.entity.Vacancy;
 import com.yusufjon.recruitmentplatform.vacancy.repository.VacancyRepository;
@@ -17,9 +25,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -297,22 +310,99 @@ class VacancyServiceTest {
     }
 
     @Test
-    @DisplayName("should filter vacancies by title when title parameter is provided")
-    void shouldFilterVacanciesByTitleWhenTitleParameterIsProvided() {
+    @DisplayName("should return paged vacancies using filters and sorting")
+    void shouldReturnPagedVacanciesUsingFiltersAndSorting() {
         User recruiter = user(1L, RoleName.RECRUITER);
         Company company = company(10L, recruiter);
         LocalDateTime createdAt = LocalDateTime.now();
         Vacancy backendVacancy = vacancy(20L, "Backend Java Developer", "APIs", "Tashkent", 1000.0, 2000.0, company, createdAt);
         Vacancy fullstackVacancy = vacancy(21L, "Senior Java Fullstack", "Platform", "Samarkand", 1500.0, 2500.0, company, createdAt.plusDays(1));
+        VacancyFilterRequest request = new VacancyFilterRequest();
+        request.setTitle("java");
+        request.setLocation("tashkent");
+        request.setCompanyId(company.getId());
+        request.setCompanyName("acme");
+        request.setMinSalary(1500.0);
+        request.setMaxSalary(2600.0);
+        request.setPage(1);
+        request.setSize(5);
+        request.setSortBy("salaryTo");
+        request.setSortDir("asc");
 
-        when(vacancyRepository.findByTitleContainingIgnoreCase("java")).thenReturn(List.of(backendVacancy, fullstackVacancy));
+        when(vacancyRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(backendVacancy, fullstackVacancy), Pageable.ofSize(5).withPage(1), 7));
 
-        List<VacancyResponse> response = vacancyService.getAllVacancies("java");
+        PageResponse<VacancyResponse> response = vacancyService.getAllVacancies(request);
 
-        assertEquals(2, response.size());
-        assertEquals("Backend Java Developer", response.get(0).getTitle());
-        assertEquals("Senior Java Fullstack", response.get(1).getTitle());
-        verify(vacancyRepository).findByTitleContainingIgnoreCase("java");
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(vacancyRepository).findAll(any(Specification.class), pageableCaptor.capture());
+
+        Pageable pageable = pageableCaptor.getValue();
+        assertEquals(1, pageable.getPageNumber());
+        assertEquals(5, pageable.getPageSize());
+        assertEquals(Sort.Direction.ASC, pageable.getSort().getOrderFor("salaryTo").getDirection());
+        assertEquals(2, response.getContent().size());
+        assertEquals("Backend Java Developer", response.getContent().get(0).getTitle());
+        assertEquals("Senior Java Fullstack", response.getContent().get(1).getTitle());
+        assertEquals(1, response.getPage());
+        assertEquals(5, response.getSize());
+        assertEquals(7, response.getTotalElements());
+    }
+
+    @Test
+    @DisplayName("should throw when sortBy is invalid")
+    void shouldThrowWhenSortByIsInvalid() {
+        VacancyFilterRequest request = new VacancyFilterRequest();
+        request.setSortBy("companyName");
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> vacancyService.getAllVacancies(request));
+
+        assertEquals("Invalid sortBy value", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("should throw when sortDir is invalid")
+    void shouldThrowWhenSortDirIsInvalid() {
+        VacancyFilterRequest request = new VacancyFilterRequest();
+        request.setSortDir("down");
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> vacancyService.getAllVacancies(request));
+
+        assertEquals("Invalid sortDir value", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("should throw when salary range is invalid")
+    void shouldThrowWhenSalaryRangeIsInvalid() {
+        VacancyFilterRequest request = new VacancyFilterRequest();
+        request.setMinSalary(3000.0);
+        request.setMaxSalary(2000.0);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> vacancyService.getAllVacancies(request));
+
+        assertEquals("Min salary cannot be greater than max salary", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("should throw when page is negative")
+    void shouldThrowWhenPageIsNegative() {
+        VacancyFilterRequest request = new VacancyFilterRequest();
+        request.setPage(-1);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> vacancyService.getAllVacancies(request));
+
+        assertEquals("Page must be greater than or equal to 0", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("should throw when size is outside the allowed range")
+    void shouldThrowWhenSizeIsOutsideTheAllowedRange() {
+        VacancyFilterRequest request = new VacancyFilterRequest();
+        request.setSize(101);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> vacancyService.getAllVacancies(request));
+
+        assertEquals("Size must be between 1 and 100", exception.getMessage());
     }
 
     private User user(Long id, RoleName roleName) {

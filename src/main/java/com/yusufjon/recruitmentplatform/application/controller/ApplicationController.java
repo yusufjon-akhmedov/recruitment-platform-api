@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.application.controller;
 
+/**
+ * Exposes REST endpoints for application operations and delegates incoming requests to the
+ * corresponding service layer.
+ */
+
 import com.yusufjon.recruitmentplatform.application.dto.ApplicationResponse;
 import com.yusufjon.recruitmentplatform.application.dto.CreateApplicationRequest;
 import com.yusufjon.recruitmentplatform.application.dto.UpdateApplicationStatusRequest;

@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.auth;
 
+/**
+ * Configures Spring Security rules for public endpoints, protected endpoints, stateless sessions,
+ * and JWT authentication.
+ */
+
 import com.yusufjon.recruitmentplatform.auth.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

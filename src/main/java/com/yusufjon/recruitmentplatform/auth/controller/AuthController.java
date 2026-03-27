@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.auth.controller;
 
+/**
+ * Exposes authentication endpoints for user registration and login requests.
+ */
+
 import com.yusufjon.recruitmentplatform.auth.dto.AuthResponse;
 import com.yusufjon.recruitmentplatform.auth.dto.LoginRequest;
 import com.yusufjon.recruitmentplatform.auth.dto.RegisterRequest;

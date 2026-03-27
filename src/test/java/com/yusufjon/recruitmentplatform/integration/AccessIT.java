@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.integration;
 
+/**
+ * Runs integration tests that verify which endpoints are public and which ones reject
+ * unauthenticated requests.
+ */
+
 import com.yusufjon.recruitmentplatform.integration.support.AbstractIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,7 +12,7 @@ import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Public and private access integration tests")
@@ -18,11 +23,14 @@ class AccessIT extends AbstractIntegrationTest {
     void publicGetEndpointsAreAccessibleWithoutToken() throws Exception {
         mockMvc.perform(get("/api/companies"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(jsonPath("$").isArray());
 
         mockMvc.perform(get("/api/vacancies"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(10))
+                .andExpect(jsonPath("$.totalElements").value(0));
     }
 
     @Test

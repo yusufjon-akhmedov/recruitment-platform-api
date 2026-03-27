@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.auth.security;
 
+/**
+ * Generates JWT tokens and extracts or validates token data used by the authentication flow.
+ */
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;

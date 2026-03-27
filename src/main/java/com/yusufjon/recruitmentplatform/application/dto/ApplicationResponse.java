@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.application.dto;
 
+/**
+ * Represents the API response payload returned for application data.
+ */
+
 import com.yusufjon.recruitmentplatform.shared.enums.ApplicationStatus;
 
 import java.time.LocalDateTime;

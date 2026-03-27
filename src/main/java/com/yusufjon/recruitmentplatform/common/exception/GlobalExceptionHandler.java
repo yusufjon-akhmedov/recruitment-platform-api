@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.common.exception;
 
+/**
+ * Converts application exceptions into consistent API error responses with status, message, and
+ * request path details.
+ */
+
 import com.yusufjon.recruitmentplatform.common.response.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

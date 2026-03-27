@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.application.dto;
 
+/**
+ * Holds the request data needed to update a application status through the API.
+ */
+
 import com.yusufjon.recruitmentplatform.shared.enums.ApplicationStatus;
 import jakarta.validation.constraints.NotNull;
 

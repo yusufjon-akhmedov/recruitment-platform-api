@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.vacancy.dto;
 
+/**
+ * Represents the API response payload returned for vacancy data.
+ */
+
 import java.time.LocalDateTime;
 
 public class VacancyResponse {

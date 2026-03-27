@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.company.dto;
 
+/**
+ * Represents the API response payload returned for company data.
+ */
+
 public class CompanyResponse {
 
     private Long id;

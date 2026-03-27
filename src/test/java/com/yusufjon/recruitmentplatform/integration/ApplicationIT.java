@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.integration;
 
+/**
+ * Runs end-to-end integration tests for candidate applications, recruiter review flows, and
+ * protected application endpoints.
+ */
+
 import com.yusufjon.recruitmentplatform.integration.support.AbstractIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.user.entity;
 
+/**
+ * Represents the user entity mapped to the database and used by the domain model.
+ */
+
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.common.config;
 
+/**
+ * Customizes the OpenAPI definition so Swagger documents the API and its bearer-token security
+ * scheme.
+ */
+
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

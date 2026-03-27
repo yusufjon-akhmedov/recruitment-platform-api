@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.auth.dto;
 
+/**
+ * Holds the request payload used by the login API flow.
+ */
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

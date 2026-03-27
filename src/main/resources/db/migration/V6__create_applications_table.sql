@@ -1,3 +1,4 @@
+-- Creates the applications table that tracks candidate submissions and recruiter review status.
 CREATE TABLE applications
 (
     id           BIGSERIAL PRIMARY KEY,

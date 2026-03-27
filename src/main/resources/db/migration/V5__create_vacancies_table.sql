@@ -1,3 +1,4 @@
+-- Creates the vacancies table used to store job postings for recruiter-owned companies.
 CREATE TABLE vacancies
 (
     id          BIGSERIAL PRIMARY KEY,

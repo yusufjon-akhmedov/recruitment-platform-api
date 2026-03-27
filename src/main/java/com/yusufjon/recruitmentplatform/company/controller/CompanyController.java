@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.company.controller;
 
+/**
+ * Exposes REST endpoints for company operations and delegates incoming requests to the
+ * corresponding service layer.
+ */
+
 import com.yusufjon.recruitmentplatform.company.dto.CompanyResponse;
 import com.yusufjon.recruitmentplatform.company.dto.CreateCompanyRequest;
 import com.yusufjon.recruitmentplatform.company.dto.UpdateCompanyRequest;

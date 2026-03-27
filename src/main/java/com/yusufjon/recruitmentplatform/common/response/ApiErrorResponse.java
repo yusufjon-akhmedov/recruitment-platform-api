@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.common.response;
 
+/**
+ * Represents the structured JSON error body returned by the global exception handler.
+ */
+
 import java.time.LocalDateTime;
 
 public class ApiErrorResponse {

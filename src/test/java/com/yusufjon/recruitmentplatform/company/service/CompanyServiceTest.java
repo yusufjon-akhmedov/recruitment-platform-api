@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.company.service;
 
+/**
+ * Contains unit tests that verify the behavior of the company service class by mocking its
+ * collaborators.
+ */
+
 import com.yusufjon.recruitmentplatform.common.exception.ForbiddenException;
 import com.yusufjon.recruitmentplatform.common.exception.ResourceNotFoundException;
 import com.yusufjon.recruitmentplatform.company.dto.CompanyResponse;

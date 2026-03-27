@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.support;
 
+/**
+ * Provides small test helpers for populating and clearing the Spring Security context in unit
+ * tests.
+ */
+
 import com.yusufjon.recruitmentplatform.user.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;

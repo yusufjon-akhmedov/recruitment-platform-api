@@ -1,3 +1,4 @@
+-- Creates the users table and links each user record to a role.
 CREATE TABLE users
 (
     id         BIGSERIAL PRIMARY KEY,

@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.vacancy.dto;
 
+/**
+ * Holds the request data needed to update a vacancy through the API.
+ */
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

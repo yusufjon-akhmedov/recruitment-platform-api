@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.company.service;
 
+/**
+ * Contains the business logic for company features and coordinates validation, security checks,
+ * and repository access.
+ */
+
 import com.yusufjon.recruitmentplatform.common.exception.ForbiddenException;
 import com.yusufjon.recruitmentplatform.common.exception.ResourceNotFoundException;
 import com.yusufjon.recruitmentplatform.company.dto.CompanyResponse;

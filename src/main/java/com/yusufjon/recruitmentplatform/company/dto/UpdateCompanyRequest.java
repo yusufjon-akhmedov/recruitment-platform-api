@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.company.dto;
 
+/**
+ * Holds the request data needed to update a company through the API.
+ */
+
 import jakarta.validation.constraints.NotBlank;
 
 public class UpdateCompanyRequest {

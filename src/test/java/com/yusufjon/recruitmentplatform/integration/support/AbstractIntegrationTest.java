@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.integration.support;
 
+/**
+ * Provides the shared integration-test setup, including MockMvc access, a PostgreSQL
+ * Testcontainer, and database cleanup between tests.
+ */
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.company.entity;
 
+/**
+ * Represents the company entity mapped to the database and used by the domain model.
+ */
+
 import com.yusufjon.recruitmentplatform.user.entity.User;
 import jakarta.persistence.*;
 

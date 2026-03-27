@@ -1,3 +1,4 @@
+# Main application configuration for datasource, JPA validation, Flyway migrations, server port, and JWT settings.
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/recruitment_platform

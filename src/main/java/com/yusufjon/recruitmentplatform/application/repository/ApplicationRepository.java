@@ -1,5 +1,9 @@
 package com.yusufjon.recruitmentplatform.application.repository;
 
+/**
+ * Provides JPA-based data access methods for application records used by the service layer.
+ */
+
 import com.yusufjon.recruitmentplatform.application.entity.Application;
 import com.yusufjon.recruitmentplatform.user.entity.User;
 import com.yusufjon.recruitmentplatform.vacancy.entity.Vacancy;

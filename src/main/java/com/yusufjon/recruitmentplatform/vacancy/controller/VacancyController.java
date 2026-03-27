@@ -1,14 +1,19 @@
 package com.yusufjon.recruitmentplatform.vacancy.controller;
 
+/**
+ * Exposes REST endpoints for vacancy operations and delegates incoming requests to the
+ * corresponding service layer.
+ */
+
 import com.yusufjon.recruitmentplatform.vacancy.dto.CreateVacancyRequest;
 import com.yusufjon.recruitmentplatform.vacancy.dto.UpdateVacancyRequest;
+import com.yusufjon.recruitmentplatform.vacancy.dto.VacancyFilterRequest;
 import com.yusufjon.recruitmentplatform.vacancy.dto.VacancyResponse;
+import com.yusufjon.recruitmentplatform.common.response.PageResponse;
 import com.yusufjon.recruitmentplatform.vacancy.service.VacancyService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/vacancies")
@@ -27,10 +32,8 @@ public class VacancyController {
     }
 
     @GetMapping
-    public java.util.List<VacancyResponse> getAllVacancies(
-            @RequestParam(required = false) String title
-    ) {
-        return vacancyService.getAllVacancies(title);
+    public PageResponse<VacancyResponse> getAllVacancies(@ModelAttribute VacancyFilterRequest request) {
+        return vacancyService.getAllVacancies(request);
     }
 
     @GetMapping("/{id}")

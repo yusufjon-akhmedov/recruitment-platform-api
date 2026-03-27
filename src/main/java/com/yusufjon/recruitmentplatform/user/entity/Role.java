@@ -1,5 +1,8 @@
 package com.yusufjon.recruitmentplatform.user.entity;
 
+/**
+ * Represents the role entity mapped to the database and used by the domain model.
+ */
 
 import com.yusufjon.recruitmentplatform.shared.enums.RoleName;
 import jakarta.persistence.*;

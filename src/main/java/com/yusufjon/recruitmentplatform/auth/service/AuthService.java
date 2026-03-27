@@ -1,5 +1,10 @@
 package com.yusufjon.recruitmentplatform.auth.service;
 
+/**
+ * Handles registration and login by validating credentials, encoding passwords, loading roles, and
+ * issuing JWT tokens.
+ */
+
 import com.yusufjon.recruitmentplatform.auth.dto.AuthResponse;
 import com.yusufjon.recruitmentplatform.auth.dto.LoginRequest;
 import com.yusufjon.recruitmentplatform.auth.dto.RegisterRequest;

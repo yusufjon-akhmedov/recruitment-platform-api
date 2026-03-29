@@ -53,6 +53,9 @@ class AuthServiceTest {
     @Mock
     private JwtService jwtService;
 
+    @Mock
+    private EmailVerificationService emailVerificationService;
+
     @InjectMocks
     private AuthService authService;
 
@@ -84,6 +87,8 @@ class AuthServiceTest {
         assertEquals(request.getEmail(), userToSave.getEmail());
         assertEquals("encoded-secret", userToSave.getPassword());
         assertEquals(recruiterRole, userToSave.getRole());
+        assertTrue(!userToSave.isEmailVerified());
+        verify(emailVerificationService).createVerificationTokenAndSendEmail(savedUser);
         assertEquals("jwt-token", response.getToken());
     }
 
@@ -104,7 +109,7 @@ class AuthServiceTest {
         assertEquals("Email already exists", exception.getMessage());
         verify(roleRepository, never()).findByName(any());
         verify(userRepository, never()).save(any(User.class));
-        verifyNoInteractions(passwordEncoder, jwtService);
+        verifyNoInteractions(passwordEncoder, jwtService, emailVerificationService);
     }
 
     @Test
@@ -127,7 +132,7 @@ class AuthServiceTest {
 
         assertEquals("Role not found", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
-        verifyNoInteractions(passwordEncoder, jwtService);
+        verifyNoInteractions(passwordEncoder, jwtService, emailVerificationService);
     }
 
     @Test
@@ -142,6 +147,7 @@ class AuthServiceTest {
                 role(RoleName.RECRUITER),
                 LocalDateTime.now()
         );
+        existingUser.setEmailVerified(true);
 
         when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(existingUser));
         when(passwordEncoder.matches(request.getPassword(), existingUser.getPassword())).thenReturn(true);
@@ -163,7 +169,7 @@ class AuthServiceTest {
         BadRequestException exception = assertThrows(BadRequestException.class, () -> authService.login(request));
 
         assertEquals("Invalid email or password", exception.getMessage());
-        verifyNoInteractions(passwordEncoder, jwtService);
+        verifyNoInteractions(passwordEncoder, jwtService, emailVerificationService);
     }
 
     @Test
@@ -178,6 +184,7 @@ class AuthServiceTest {
                 role(RoleName.RECRUITER),
                 LocalDateTime.now()
         );
+        existingUser.setEmailVerified(true);
 
         when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(existingUser));
         when(passwordEncoder.matches(request.getPassword(), existingUser.getPassword())).thenReturn(false);
@@ -187,6 +194,29 @@ class AuthServiceTest {
         assertEquals("Invalid email or password", exception.getMessage());
         verify(jwtService, never()).generateToken(any());
         assertTrue(exception.getMessage().contains("Invalid email or password"));
+    }
+
+    @Test
+    @DisplayName("should fail login when email is not verified")
+    void shouldFailLoginWhenEmailIsNotVerified() {
+        LoginRequest request = new LoginRequest("john@example.com", "secret123");
+        User existingUser = new User(
+                1L,
+                "John Recruiter",
+                request.getEmail(),
+                "encoded-secret",
+                role(RoleName.RECRUITER),
+                LocalDateTime.now()
+        );
+        existingUser.setEmailVerified(false);
+
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(existingUser));
+        when(passwordEncoder.matches(request.getPassword(), existingUser.getPassword())).thenReturn(true);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> authService.login(request));
+
+        assertEquals("Email is not verified", exception.getMessage());
+        verify(jwtService, never()).generateToken(any());
     }
 
     private Role role(RoleName roleName) {

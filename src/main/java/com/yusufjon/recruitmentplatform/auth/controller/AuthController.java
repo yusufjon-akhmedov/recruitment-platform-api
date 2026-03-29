@@ -7,7 +7,9 @@ package com.yusufjon.recruitmentplatform.auth.controller;
 import com.yusufjon.recruitmentplatform.auth.dto.AuthResponse;
 import com.yusufjon.recruitmentplatform.auth.dto.LoginRequest;
 import com.yusufjon.recruitmentplatform.auth.dto.RegisterRequest;
+import com.yusufjon.recruitmentplatform.auth.dto.ResendVerificationEmailRequest;
 import com.yusufjon.recruitmentplatform.auth.service.AuthService;
+import com.yusufjon.recruitmentplatform.common.response.MessageResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,5 +33,17 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @GetMapping("/verify-email")
+    public MessageResponse verifyEmail(@RequestParam(required = false) String token) {
+        authService.verifyEmail(token);
+        return new MessageResponse("Email verified successfully");
+    }
+
+    @PostMapping("/resend-verification")
+    public MessageResponse resendVerificationEmail(@Valid @RequestBody ResendVerificationEmailRequest request) {
+        authService.resendVerificationEmail(request);
+        return new MessageResponse("Verification email sent successfully");
     }
 }

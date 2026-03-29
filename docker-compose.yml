@@ -10,15 +10,23 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: recruitment-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
   app:
     build: .
     container_name: recruitment-platform-api
     depends_on:
       - postgres
+      - mailpit
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recruitment_platform
       SPRING_DATASOURCE_USERNAME: postgres
@@ -26,8 +34,10 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_FLYWAY_ENABLED: "true"
       SPRING_FLYWAY_LOCATIONS: classpath:db/migration
-      JWT_SECRET: 12345678901234567890123456789012
-      JWT_EXPIRATION: 86400000
+      MAIL_HOST: mailpit
+      MAIL_PORT: "1025"
+      JWT_SECRET: "12345678901234567890123456789012"
+      JWT_EXPIRATION: "86400000"
     ports:
       - "8080:8080"
 

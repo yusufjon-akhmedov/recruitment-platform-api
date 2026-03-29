@@ -8,6 +8,7 @@ package com.yusufjon.recruitmentplatform.auth.service;
 import com.yusufjon.recruitmentplatform.auth.dto.AuthResponse;
 import com.yusufjon.recruitmentplatform.auth.dto.LoginRequest;
 import com.yusufjon.recruitmentplatform.auth.dto.RegisterRequest;
+import com.yusufjon.recruitmentplatform.auth.dto.ResendVerificationEmailRequest;
 import com.yusufjon.recruitmentplatform.auth.security.JwtService;
 import com.yusufjon.recruitmentplatform.common.exception.BadRequestException;
 import com.yusufjon.recruitmentplatform.common.exception.ResourceNotFoundException;
@@ -17,6 +18,7 @@ import com.yusufjon.recruitmentplatform.user.repository.RoleRepository;
 import com.yusufjon.recruitmentplatform.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -25,17 +27,21 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final EmailVerificationService emailVerificationService;
 
     public AuthService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
-                       JwtService jwtService) {
+                       JwtService jwtService,
+                       EmailVerificationService emailVerificationService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.emailVerificationService = emailVerificationService;
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already exists");
@@ -49,8 +55,10 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
+        user.setEmailVerified(false);
 
         User savedUser = userRepository.save(user);
+        emailVerificationService.createVerificationTokenAndSendEmail(savedUser);
 
         String token = jwtService.generateToken(savedUser.getEmail());
 
@@ -65,7 +73,19 @@ public class AuthService {
             throw new BadRequestException("Invalid email or password");
         }
 
+        if (!user.isEmailVerified()) {
+            throw new BadRequestException("Email is not verified");
+        }
+
         String token = jwtService.generateToken(user.getEmail());
         return new AuthResponse(token);
+    }
+
+    public void verifyEmail(String token) {
+        emailVerificationService.verifyEmail(token);
+    }
+
+    public void resendVerificationEmail(ResendVerificationEmailRequest request) {
+        emailVerificationService.resendVerificationEmail(request.getEmail());
     }
 }

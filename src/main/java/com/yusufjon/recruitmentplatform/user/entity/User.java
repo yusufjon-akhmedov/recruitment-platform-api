@@ -29,6 +29,9 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -76,6 +79,10 @@ public class User {
         return role;
     }
 
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -98,6 +105,10 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {

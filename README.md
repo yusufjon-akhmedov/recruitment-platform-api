@@ -140,9 +140,13 @@ After startup:
 
 * API base URL: `http://localhost:8080`
 * Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+* Mailpit UI: `http://localhost:8025`
 
 > Flyway runs automatically on startup using scripts in `src/main/resources/db/migration`.
 > Local defaults use database `recruitment_platform`, username `postgres`, password `postgres`, and port `5432`.
+> Mailpit is used for local email verification testing.
+> Demo users are seeded on a clean DB: `admin@local.dev`, `recruiter@local.dev`, `candidate@local.dev`.
+> Demo password for all seeded users: `secret123`.
 
 ---
 

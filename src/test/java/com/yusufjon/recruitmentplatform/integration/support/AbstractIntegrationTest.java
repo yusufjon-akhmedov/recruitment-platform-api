@@ -7,12 +7,15 @@ package com.yusufjon.recruitmentplatform.integration.support;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yusufjon.recruitmentplatform.auth.service.EmailSender;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,6 +59,9 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @MockBean
+    protected EmailSender emailSender;
+
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
@@ -65,10 +71,30 @@ public abstract class AbstractIntegrationTest {
 
     @BeforeEach
     void resetDatabase() {
-        jdbcTemplate.execute("TRUNCATE TABLE applications, vacancies, companies, users RESTART IDENTITY CASCADE");
+        jdbcTemplate.execute("TRUNCATE TABLE email_verification_tokens, applications, vacancies, companies, users RESTART IDENTITY CASCADE");
+        Mockito.reset(emailSender);
     }
 
     protected String registerUserAndGetToken(String fullName, String email, String password, String role) throws Exception {
+        registerUser(fullName, email, password, role);
+        verifyEmailForUser(email);
+        return loginAndGetToken(email, password);
+    }
+
+    protected String loginAndGetToken(String email, String password) throws Exception {
+        MvcResult result = mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJson(Map.of(
+                                "email", email,
+                                "password", password
+                        ))))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        return readJson(result).get("token").asText();
+    }
+
+    protected String registerUser(String fullName, String email, String password, String role) throws Exception {
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJson(Map.of(
@@ -83,17 +109,62 @@ public abstract class AbstractIntegrationTest {
         return readJson(result).get("token").asText();
     }
 
-    protected String loginAndGetToken(String email, String password) throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJson(Map.of(
-                                "email", email,
-                                "password", password
-                        ))))
-                .andExpect(status().isOk())
-                .andReturn();
+    protected void verifyEmailForUser(String email) throws Exception {
+        mockMvc.perform(get("/api/auth/verify-email")
+                        .param("token", getVerificationToken(email)))
+                .andExpect(status().isOk());
+    }
 
-        return readJson(result).get("token").asText();
+    protected String getVerificationToken(String email) {
+        return jdbcTemplate.queryForObject(
+                """
+                SELECT evt.token
+                FROM email_verification_tokens evt
+                JOIN users u ON evt.user_id = u.id
+                WHERE u.email = ?
+                """,
+                String.class,
+                email
+        );
+    }
+
+    protected boolean isEmailVerified(String email) {
+        Boolean value = jdbcTemplate.queryForObject(
+                "SELECT email_verified FROM users WHERE email = ?",
+                Boolean.class,
+                email
+        );
+        return Boolean.TRUE.equals(value);
+    }
+
+    protected int countVerificationTokens(String email) {
+        Integer count = jdbcTemplate.queryForObject(
+                """
+                SELECT COUNT(*)
+                FROM email_verification_tokens evt
+                JOIN users u ON evt.user_id = u.id
+                WHERE u.email = ?
+                """,
+                Integer.class,
+                email
+        );
+        return count == null ? 0 : count;
+    }
+
+    protected boolean isVerificationTokenUsed(String token) {
+        Boolean value = jdbcTemplate.queryForObject(
+                "SELECT verified_at IS NOT NULL FROM email_verification_tokens WHERE token = ?",
+                Boolean.class,
+                token
+        );
+        return Boolean.TRUE.equals(value);
+    }
+
+    protected void expireVerificationToken(String token) {
+        jdbcTemplate.update(
+                "UPDATE email_verification_tokens SET expires_at = NOW() - INTERVAL '1 hour' WHERE token = ?",
+                token
+        );
     }
 
     protected Long createCompany(String token, String name, String description, String location) throws Exception {

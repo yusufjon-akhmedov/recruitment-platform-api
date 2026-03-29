@@ -1,5 +1,7 @@
 # Recruitment Platform • API
 
+[![CI](https://github.com/yusufjon-akhmedov/recruitment-platform-api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/yusufjon-akhmedov/recruitment-platform-api/actions/workflows/ci.yml)
+
 > JWT authentication, RBAC, company and vacancy management, candidate applications, recruiter review flow
 
 **Recruitment Platform API** is a monolithic REST backend for a simple hiring workflow. It handles user

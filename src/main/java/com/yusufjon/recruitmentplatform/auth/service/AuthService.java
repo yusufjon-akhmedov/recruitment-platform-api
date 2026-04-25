@@ -16,11 +16,13 @@ import com.yusufjon.recruitmentplatform.user.entity.Role;
 import com.yusufjon.recruitmentplatform.user.entity.User;
 import com.yusufjon.recruitmentplatform.user.repository.RoleRepository;
 import com.yusufjon.recruitmentplatform.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -28,18 +30,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final EmailVerificationService emailVerificationService;
-
-    public AuthService(UserRepository userRepository,
-                       RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder,
-                       JwtService jwtService,
-                       EmailVerificationService emailVerificationService) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-        this.emailVerificationService = emailVerificationService;
-    }
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {

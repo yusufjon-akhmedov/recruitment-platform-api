@@ -8,11 +8,17 @@ import com.yusufjon.recruitmentplatform.shared.enums.ApplicationStatus;
 import com.yusufjon.recruitmentplatform.user.entity.User;
 import com.yusufjon.recruitmentplatform.vacancy.entity.Vacancy;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "applications")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Application {
 
     @Id
@@ -34,9 +40,6 @@ public class Application {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public Application() {
-    }
-
     public Application(Long id, User candidate, Vacancy vacancy, ApplicationStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.candidate = candidate;
@@ -53,43 +56,4 @@ public class Application {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public User getCandidate() {
-        return candidate;
-    }
-
-    public Vacancy getVacancy() {
-        return vacancy;
-    }
-
-    public ApplicationStatus getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setCandidate(User candidate) {
-        this.candidate = candidate;
-    }
-
-    public void setVacancy(Vacancy vacancy) {
-        this.vacancy = vacancy;
-    }
-
-    public void setStatus(ApplicationStatus status) {
-        this.status = status;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }
